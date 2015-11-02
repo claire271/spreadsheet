@@ -117,10 +117,12 @@ function Spreadsheet(textarea) {
   }
 
   this.delRow = function(index) {
-
+    table.children[index + 1].remove();
   }
 
   this.delColumn = function(index) {
-
+    for(var i = 0;i < n_rows + 1;i++) {
+      table.children[i].children[index + 1].remove();
+    }
   }
 }
