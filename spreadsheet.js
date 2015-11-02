@@ -50,8 +50,15 @@ function Spreadsheet(textarea) {
     header.appendChild(iframe.doc.createElement("th"));
     for(var i = 0;i < n_cols;i++) {
       var head = iframe.doc.createElement("th");
-      head.appendChild(iframe.doc.createTextNode(String.fromCharCode(65 + i)));
       header.appendChild(head);
+      head.appendChild(iframe.doc.createTextNode(String.fromCharCode(65 + i)));
+      var button = iframe.doc.createElement("button");
+      button.appendChild(iframe.doc.createTextNode("x"));
+      (function() {
+        var index = i;
+        button.onclick = function() { instance.delColumn(index); };
+      })();
+      head.appendChild(button);
     }
     var addCol = iframe.doc.createElement("th");
     addCol.appendChild(iframe.doc.createTextNode("+"));
@@ -63,6 +70,13 @@ function Spreadsheet(textarea) {
       table.appendChild(row_e);
       var label = iframe.doc.createElement("th");
       label.appendChild(iframe.doc.createTextNode(i + 1));
+      var button = iframe.doc.createElement("button");
+      button.appendChild(iframe.doc.createTextNode("x"));
+      (function() {
+        var index = i;
+        button.onclick = function() { instance.delRow(index); };
+      })();
+      label.appendChild(button);
       row_e.appendChild(label);
 
       for(var i = 0;i < n_cols;i++) {
@@ -86,7 +100,14 @@ function Spreadsheet(textarea) {
     var row_e = iframe.doc.createElement("tr");
     table.insertBefore(row_e,table.children[n_rows + 1]);
     var label = iframe.doc.createElement("th");
-    label.appendChild(iframe.doc.createTextNode(1 + n_rows++));
+    label.appendChild(iframe.doc.createTextNode(1 + n_rows));
+    var button = iframe.doc.createElement("button");
+    button.appendChild(iframe.doc.createTextNode("x"));
+    (function() {
+      var index = n_rows;
+      button.onclick = function() { instance.delRow(index); };
+    })();
+    label.appendChild(button);
     row_e.appendChild(label);
     
     for(var i = 0;i < n_cols;i++) {
@@ -96,12 +117,21 @@ function Spreadsheet(textarea) {
       textfield.type = "text";
       cell.appendChild(textfield);
     }
+
+    n_rows++;
   }
   
   this.addColumn = function() {
     var header = table.children[0];
     var head = iframe.doc.createElement("th");
     head.appendChild(iframe.doc.createTextNode(String.fromCharCode(65 + n_cols)));
+    var button = iframe.doc.createElement("button");
+    button.appendChild(iframe.doc.createTextNode("x"));
+    (function() {
+      var index = n_cols;
+      button.onclick = function() { instance.delColumn(index); };
+    })();
+    head.appendChild(button);
     header.insertBefore(head,header.children[n_cols + 1]);
 
     for(var i = 0;i < n_rows;i++) {
@@ -118,11 +148,40 @@ function Spreadsheet(textarea) {
 
   this.delRow = function(index) {
     table.children[index + 1].remove();
+    for(var i = 0;i < n_rows - 1;i++) {
+      var label = table.children[i + 1].children[0];
+      label.innerHTML = "";
+      label.appendChild(iframe.doc.createTextNode(1 + i));
+      var button = iframe.doc.createElement("button");
+      button.appendChild(iframe.doc.createTextNode("x"));
+      (function() {
+        var ind = i;
+        button.onclick = function() { instance.delRow(ind); };
+      })();
+      label.appendChild(button);
+    }
+
+    n_rows--;
   }
 
   this.delColumn = function(index) {
     for(var i = 0;i < n_rows + 1;i++) {
       table.children[i].children[index + 1].remove();
     }
+
+    for(var i = 0;i < n_cols - 1;i++) {
+      var head = table.children[0].children[i + 1];
+      head.innerHTML = "";
+      head.appendChild(iframe.doc.createTextNode(String.fromCharCode(65 + i)));
+      var button = iframe.doc.createElement("button");
+      button.appendChild(iframe.doc.createTextNode("x"));
+      (function() {
+        var ind = i;
+        button.onclick = function() { instance.delColumn(ind); };
+      })();
+      head.appendChild(button);
+    }
+
+    n_cols--;
   }
 }
