@@ -194,4 +194,16 @@ function Spreadsheet(textarea) {
 
     n_cols--;
   }
+
+  this.export = function() {
+    var output = "";
+    for(var i = 0;i < n_rows;i++) {
+      var row = table.children[i + 1];
+      for(var j = 0;j < n_cols;j++) {
+        output += row.children[j + 1].children[0].value;
+        output += (j < n_cols - 1) ? "\t" : (i < n_rows - 1) ? "\n" : "";
+      }
+    }
+    return output;
+  }
 }
