@@ -17,6 +17,7 @@ function Spreadsheet(textarea) {
 
   setTimeout(function() {
     //Getting the iframe document
+    //**********
     //Code taken from http://thomas.bindzus.me/2007/12/24/adding-dynamic-contents-to-iframes/
     // Initiate the iframe's document to null
     iframe.doc = null;
@@ -33,6 +34,7 @@ function Spreadsheet(textarea) {
     else if(iframe.document)
       // Others?
       iframe.doc = iframe.document;
+    //**********
 
     table = iframe.doc.createElement("table");
     iframe.doc.body.appendChild(table);
@@ -47,7 +49,9 @@ function Spreadsheet(textarea) {
     });
     
     var header = iframe.doc.createElement("tr");
-    header.appendChild(iframe.doc.createElement("th"));
+    var topLeft = iframe.doc.createElement("th");
+    header.appendChild(topLeft);
+    topLeft.style.minWidth = "4em";
     for(var i = 0;i < n_cols;i++) {
       var head = iframe.doc.createElement("th");
       header.appendChild(head);
@@ -61,7 +65,10 @@ function Spreadsheet(textarea) {
       head.appendChild(button);
     }
     var addCol = iframe.doc.createElement("th");
-    addCol.appendChild(iframe.doc.createTextNode("+"));
+    var addColB = iframe.doc.createElement("button");
+    addColB.appendChild(iframe.doc.createTextNode("+"));
+    addColB.onclick = function() { instance.addColumn(); };
+    addCol.appendChild(addColB);
     header.appendChild(addCol);
     table.appendChild(header);
 
@@ -91,7 +98,10 @@ function Spreadsheet(textarea) {
 
     var footer = iframe.doc.createElement("tr");
     var addRow = iframe.doc.createElement("th");
-    addRow.appendChild(iframe.doc.createTextNode("+"));
+    var addRowB = iframe.doc.createElement("button");
+    addRowB.appendChild(iframe.doc.createTextNode("+"));
+    addRowB.onclick = function() { instance.addRow(); };
+    addRow.appendChild(addRowB);
     footer.appendChild(addRow);
     table.appendChild(footer);
   },1);
